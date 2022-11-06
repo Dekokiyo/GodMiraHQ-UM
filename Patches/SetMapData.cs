@@ -10,7 +10,7 @@ namespace UltimateMods.Maps
 
         public static void ShipStatusAwake(ShipStatus __instance)
         {
-            if (PlayerControl.LocalPlayer.isMira() && CustomOptionHolder.EnableGodMiraHQ.getBool())
+            if (COHelpers.IsGodMiraHQ)
             {
                 DropShip = GameObject.Find("Walls/Dropship");
                 DropShip.SetActive(false);
@@ -26,6 +26,13 @@ namespace UltimateMods.Maps
                 GodDropShip.transform.localPosition = new Vector3(-11.6f, 14.5f, 0.5f);
                 GodDropShip.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
                 GodDropShip.SetActive(true);
+
+                var LabHallWireTask = GameObject.Find("MiraShip(Clone)/LabHall/FixWiringConsole");
+                Vector3 LabHallWireTaskPos = LabHallWireTask.transform.position + new Vector3(-0.65f, 0.15f, 0f);
+                if (LabHallWireTask != null && COHelpers.IsGodMiraHQ)
+                {
+                    LabHallWireTask.transform.position = LabHallWireTaskPos;
+                }
             }
         }
 
