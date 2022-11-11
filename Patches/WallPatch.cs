@@ -3,6 +3,7 @@ using UnityEngine;
 using static UltimateMods.Modules.Assets;
 using System.Linq;
 using System.Collections.Generic;
+
 namespace UltimateMods.Maps
 {
     public static class ResetLabHallWall
@@ -11,42 +12,67 @@ namespace UltimateMods.Maps
         {
             if (COHelpers.IsGodMiraHQ)
             {
-                Transform Walls = __instance.transform.Find("LabHall");
-                EdgeCollider2D Collider1 = Walls.GetComponentsInChildren<EdgeCollider2D>()[0];
-                EdgeCollider2D Collider2 = Walls.gameObject.AddComponent<EdgeCollider2D>();
-                List<Vector2> points1 = new();
-                List<Vector2> points2 = new();
-                points1.Add(new Vector2(0.3708f, -3.5563f));
-                points1.Add(new Vector2(0.3725f, 0.931f));
-                points1.Add(new Vector2(0.5054f, 0.9247f));
-                points1.Add(new Vector2(0.4976f, -2.7148f));
-                points1.Add(new Vector2(5.231f, -2.7148f));
-                points1.Add(new Vector2(5.258f, 1.7546f));
-                points1.Add(new Vector2(1.1274f, 1.7418f));
-                points1.Add(new Vector2(1.1157f, 2.1783f));
-                points1.Add(new Vector2(0.3054f, 2.1791f));
-                points2.Add(new Vector2(-0.9047f, 2.1791f));
-                points2.Add(new Vector2(-1.5097f, 1.3651f));
-                points2.Add(new Vector2(-1.8551f, 1.477f));
-                points2.Add(new Vector2(-1.8782f, -1.6192f));
-                points2.Add(new Vector2(-1.9957f, -1.6167f));
-                points2.Add(new Vector2(-2.0201f, 1.9835f));
-                points2.Add(new Vector2(-3.1187f, 1.9831f));
-                points2.Add(new Vector2(-3.962f, 1.0953f));
-                points2.Add(new Vector2(-4.7947f, 1.0891f));
-                points2.Add(new Vector2(-5.6462f, 2.0045f));
-                points2.Add(new Vector2(-6.7684f, 2.0074f));
-                points2.Add(new Vector2(-6.7533f, -2.7233f));
-                points2.Add(new Vector2(-1.8634f, -2.7335f));
-                points2.Add(new Vector2(-1.875f, -3.5603f));
-                Collider1.points = points1.ToArray();
-                Collider2.points = points2.ToArray();
+                Transform LabHallWalls = __instance.transform.Find("LabHall");
+                EdgeCollider2D Collider1 = LabHallWalls.GetComponentsInChildren<EdgeCollider2D>()[0];
+                EdgeCollider2D Collider2 = LabHallWalls.gameObject.AddComponent<EdgeCollider2D>();
+                List<Vector2> Points1 = Collider1.points.ToArray()[..7].ToList();
+                List<Vector2> Points2 = new();
+                Points1.Add(new Vector2(0.3054f, 2.1791f));
+                Points2.Add(new Vector2(-0.9047f, 2.1791f));
+                Points2.AddRange(Collider1.points.ToArray()[9..].ToList());
+                Collider1.points = Points1.ToArray();
+                Collider2.points = Points2.ToArray();
+
+                Transform LaunchPadWalls = __instance.transform.Find("LaunchPad");
+                EdgeCollider2D Collider3 = LaunchPadWalls.GetComponentsInChildren<EdgeCollider2D>()[0];
+                EdgeCollider2D Collider4 = LaunchPadWalls.gameObject.AddComponent<EdgeCollider2D>();
+                List<Vector2> Points3 = Collider3.points.ToArray()[..6].ToList();
+                List<Vector2> Points4 = Collider3.points.ToArray()[6..].ToList();
+                Collider3.points = Points3.ToArray();
+                Collider4.points = Points4.ToArray();
 
                 GameObject CloudGenCollider = GameObject.Find("MiraShip(Clone)/CloudGen");
-                foreach (EdgeCollider2D c in CloudGenCollider.GetComponents<EdgeCollider2D>())
+                foreach (EdgeCollider2D ec2 in CloudGenCollider.GetComponents<EdgeCollider2D>())
                 {
-                    c.enabled = false;
+                    ec2.enabled = false;
                 }
+            }
+        }
+
+        public static void Shadow(ShipStatus __instance)
+        {
+            if (COHelpers.IsGodMiraHQ)
+            {/*
+                Transform Shadows = Transform.Instantiate(__instance.transform.FindChild("Cafe").FindChild("Shadows"), __instance.transform.FindChild("LabHall"));
+                foreach (Object component in Shadows.GetComponents<EdgeCollider2D>())
+                    Object.Destroy(component);
+                Shadows.gameObject.SetActive(true);
+
+                Shadows.gameObject.AddComponent<EdgeCollider2D>().points = new Il2CppStructArray<Vector2>(new Vector2[22]
+                { // 24.22 1.89
+                    new Vector2(5.7f, 15.9f),
+                    new Vector2(5.7f, 21.2f),
+                    new Vector2(5.7f, 21.2f),
+                    new Vector2(5.7f, 20.7f),
+                    new Vector2(-3.9f, 20.7f),
+                    new Vector2(-3.9f, 12.15f),
+                    new Vector2(-5f, 12.15f),
+                    new Vector2(-5f, 20.7f),
+                    new Vector2(-6f, 20.7f),
+                    new Vector2(-6f, 23.5f),
+                    new Vector2(5.7f, 23.5f),
+                    new Vector2(5.7f, 22.7f),
+                    new Vector2(7.22f, 22.7f),
+                    new Vector2(7.22f, 21.6f),
+                    new Vector2(7.21f, 21.6f),
+                    new Vector2(7.21f, 22.7f),
+                    new Vector2(10f, 22.7f),
+                    new Vector2(10f, 16.4f),
+                    new Vector2(7.3f, 16.4f),
+                    new Vector2(7.3f, 20.6f),
+                    new Vector2(7.2f, 20.6f),
+                    new Vector2(7.2f, 14.9f),
+                });*/
             }
         }
 
@@ -56,6 +82,7 @@ namespace UltimateMods.Maps
             static void Postfix(ShipStatus __instance)
             {
                 ShipStatusAwake(__instance);
+                Shadow(__instance);
             }
         }
     }

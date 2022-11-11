@@ -1,5 +1,7 @@
 using HarmonyLib;
 using UnityEngine;
+using System.Linq;
+using System.Collections.Generic;
 using static UltimateMods.Modules.Assets;
 
 namespace UltimateMods.Maps
@@ -7,6 +9,8 @@ namespace UltimateMods.Maps
     public static class GodMira
     {
         public static GameObject DropShip;
+        public static EdgeCollider2D Shadow;
+        public static SpriteRenderer ShadowRend;
 
         public static void ShipStatusAwake(ShipStatus __instance)
         {
@@ -33,6 +37,32 @@ namespace UltimateMods.Maps
                 {
                     LabHallWireTask.transform.position = LabHallWireTaskPos;
                 }
+
+                GameObject ShadowBase = GameObject.Find("MiraShip(Clone)/Walls/CafeteriaWalls");
+                {
+                    SpriteRenderer renderer = ShadowBase.GetComponent<SpriteRenderer>();
+                    if (renderer != null)
+                    {
+                        GodMiraHQMap.transform.GetChild(0).transform.GetComponent<SpriteRenderer>().material = renderer.material;
+                        GodMiraHQMap.transform.GetChild(1).transform.GetComponent<SpriteRenderer>().material = renderer.material;
+                        GodMiraHQMap.transform.GetChild(2).transform.GetComponent<SpriteRenderer>().material = renderer.material;
+                        GodDropShip.transform.GetChild(0).transform.GetComponent<SpriteRenderer>().material = renderer.material;
+                        GodDropShip.transform.GetChild(1).transform.GetComponent<SpriteRenderer>().material = renderer.material;
+                    }
+                }
+
+                Transform LabHallShadow = __instance.transform.Find("LabHall").FindChild("Shadows LabHall");
+                EdgeCollider2D Shadow = LabHallShadow.GetComponent<EdgeCollider2D>();
+                EdgeCollider2D Shadow2 = LabHallShadow.gameObject.AddComponent<EdgeCollider2D>();
+
+                List<Vector2> VanillaShadow = Shadow.points.ToArray()[..5].ToList();
+                List<Vector2> VanillaShadow2 = new();
+                VanillaShadow.Add(new Vector2(-1.0047f, 3.0883f));
+                VanillaShadow2.Add(new Vector2(0.2554f, 3.1168f));
+                VanillaShadow2.AddRange(Shadow.points.ToArray()[6..].ToList());
+
+                Shadow.points = VanillaShadow.ToArray();
+                Shadow2.points = VanillaShadow2.ToArray();
             }
         }
 
